@@ -290,6 +290,7 @@ class AppData: ObservableObject {
         path.joinPath("iOS DeviceSupport"),
         path.joinPath("watchOS DeviceSupport"),
         path.joinPath("tvOS DeviceSupport"),
+        path.joinPath("macOS DeviceSupport"),
         path.joinPath("nonExist DeviceSupport"),
       ]
       
@@ -301,7 +302,9 @@ class AppData: ObservableObject {
     analysis.totalSize = 0
     analysis.itemsCount = subDirectories.count
     analysis.analyzedCount = 0
-
+    analysis.items = []
+    analysis.groupedItems = []
+    
     DispatchQueue.global(qos: .userInitiated).async {
       for subDirectory in subDirectories{
         guard let totalSize = try? fm.getDirectorySize(subDirectory) else {
