@@ -53,7 +53,7 @@ class FileHelper {
     openPanel.canChooseDirectories = true
     openPanel.canCreateDirectories = false
     openPanel.canChooseFiles = false
-    //        openPanel.title = CHOOSE_DEVELOPER_DIR
+    openPanel.directoryURL = URL(fileURLWithPath: FileHelper.standard.getDefaultXcodePath())
     openPanel.message = "\(CHOOSE_DEVELOPER_DIR)\n\(CHOOSE_DEVELOPER_DIR_TIP)"
     openPanel.showsHiddenFiles = true
     openPanel.begin { (result) -> Void in
@@ -127,12 +127,11 @@ class FileHelper {
     var size: UInt64 = 0
     let fm = FileManager.default
     
-    var isDirectory = ObjCBool(true)
-    
     var contents: [String]
     
-    fm.fileExists(atPath: path, isDirectory: &isDirectory)
-    if isDirectory.boolValue {
+    let attribs = try? fm.attributesOfItem(atPath: path)
+    
+    if attribs?[FileAttributeKey.type] as? FileAttributeType == FileAttributeType.typeDirectory {
       guard let subpaths = fm.subpaths(atPath: path) else {
         return 0
       }
